@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="A structured, searchable documentation website for Databricks interview questions and answers." />
+  <meta property="og:title" content="Databricks Interview Hub" />
+  <meta property="og:description" content="Well-organized Databricks interview questions and answers across SQL, Spark, Delta Lake, architecture, and scenario rounds." />
+  <title>Databricks Interview Hub</title>
+  <link href="https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600,700&f[]=zodiak@400,500,700&display=swap" rel="stylesheet">
+  <style>
+    :root, [data-theme="light"] {
+      --text-xs: clamp(0.75rem, 0.7rem + 0.25vw, 0.875rem);
+      --text-sm: clamp(0.875rem, 0.8rem + 0.35vw, 1rem);
+      --text-base: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
+      --text-lg: clamp(1.125rem, 1rem + 0.75vw, 1.5rem);
+      --text-xl: clamp(1.5rem, 1.2rem + 1.25vw, 2.25rem);
+      --text-2xl: clamp(2rem, 1.2rem + 2.5vw, 3.5rem);
+      --space-1: 0.25rem; --space-2: 0.5rem; --space-3: 0.75rem; --space-4: 1rem; --space-5: 1.25rem; --space-6: 1.5rem; --space-8: 2rem; --space-10: 2.5rem; --space-12: 3rem; --space-16: 4rem; --space-20: 5rem;
+      --color-bg: #f7f6f2;
+      --color-surface: #f9f8f5;
+      --color-surface-2: #fbfbf9;
+      --color-surface-offset: #edeae5;
+      --color-border: #d4d1ca;
+      --color-divider: #dcd9d5;
+      --color-text: #28251d;
+      --color-text-muted: #6d6a62;
+      --color-text-faint: #9f9a92;
+      --color-primary: #01696f;
+      --color-primary-hover: #0c4e54;
+      --color-primary-highlight: #dcebea;
+      --color-success: #437a22;
+      --color-warning: #964219;
+      --color-error: #a12c7b;
+      --color-text-inverse: #f9f8f4;
+      --radius-sm: 0.375rem; --radius-md: 0.5rem; --radius-lg: 0.75rem; --radius-xl: 1rem; --radius-full: 9999px;
+      --shadow-sm: 0 1px 2px rgba(29, 27, 25, 0.06);
+      --shadow-md: 0 12px 32px rgba(29, 27, 25, 0.08);
+      --transition: 180ms cubic-bezier(0.16, 1, 0.3, 1);
+      --content-wide: 1200px;
+      --content-default: 1024px;
+      --font-display: 'Zodiak', Georgia, serif;
+      --font-body: 'General Sans', Inter, sans-serif;
+    }
+    [data-theme="dark"] {
+      --color-bg: #171614;
+      --color-surface: #1c1b19;
+      --color-surface-2: #201f1d;
+      --color-surface-offset: #242320;
+      --color-border: #393836;
+      --color-divider: #2c2b29;
+      --color-text: #e4e0d8;
+      --color-text-muted: #b0aba2;
+      --color-text-faint: #7f7a72;
+      --color-primary: #58a8b1;
+      --color-primary-hover: #7bbcc4;
+      --color-primary-highlight: #213436;
+      --color-success: #8dc46e;
+      --color-warning: #dc9a66;
+      --color-error: #d782bc;
+      --color-text-inverse: #171614;
+      --shadow-sm: 0 1px 2px rgba(0,0,0,0.25);
+      --shadow-md: 0 12px 32px rgba(0,0,0,0.32);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      min-height: 100dvh;
+      font-family: var(--font-body);
+      font-size: var(--text-base);
+      line-height: 1.6;
+      background: var(--color-bg);
+      color: var(--color-text);
+    }
+    img, svg { display: block; max-width: 100%; }
+    a { color: inherit; text-decoration: none; }
+    button, input { font: inherit; }
+    button { cursor: pointer; border: none; background: none; }
+    :focus-visible { outline: 2px solid var(--color-primary); outline-offset: 3px; border-radius: var(--radius-sm); }
+    .sr-only {
+      position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+    }
+    .skip-link {
+      position: absolute; left: var(--space-4); top: -100px; background: var(--color-primary); color: var(--color-text-inverse); padding: var(--space-3) var(--space-4); border-radius: var(--radius-md); z-index: 100;
+    }
+    .skip-link:focus { top: var(--space-4); }
+    .site-shell {
+      display: grid;
+      grid-template-columns: 300px minmax(0, 1fr);
+      min-height: 100dvh;
+    }
+    .sidebar {
+      position: sticky;
+      top: 0;
+      height: 100dvh;
+      padding: var(--space-6);
+      background: color-mix(in srgb, var(--color-surface) 88%, transparent);
+      border-right: 1px solid color-mix(in srgb, var(--color-text) 12%, transparent);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-6);
+    }
+    .logo {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-3);
+      font-size: var(--text-sm);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--color-text);
+      font-weight: 700;
+    }
+    .logo svg { width: 34px; height: 34px; color: var(--color-primary); }
+    .sidebar h1 {
+      font-family: var(--font-display);
+      font-size: var(--text-xl);
+      line-height: 1.05;
+      max-width: 10ch;
+    }
+    .sidebar p { color: var(--color-text-muted); max-width: 28ch; }
+    .theme-toggle, .export-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 44px;
+      padding: var(--space-3) var(--space-4);
+      border: 1px solid color-mix(in srgb, var(--color-text) 12%, transparent);
+      border-radius: var(--radius-full);
+      background: var(--color-surface-2);
+      transition: background var(--transition), border-color var(--transition), transform var(--transition);
+    }
+    .theme-toggle:hover, .export-btn:hover, .nav-link:hover, .question-card:hover { transform: translateY(-1px); }
+    .tool-row { display: flex; gap: var(--space-3); flex-wrap: wrap; }
+    .search-box {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      padding: var(--space-3) var(--space-4);
+      border-radius: var(--radius-lg);
+      background: var(--color-surface-2);
+      border: 1px solid color-mix(in srgb, var(--color-text) 12%, transparent);
+    }
+    .search-box input {
+      width: 100%;
+      border: 0;
+      outline: 0;
+      background: transparent;
+      color: var(--color-text);
+    }
+    .nav-list {
+      display: grid;
+      gap: var(--space-2);
+      overflow: auto;
+      padding-right: var(--space-1);
+    }
+    .nav-link {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-3);
+      padding: var(--space-3) var(--space-4);
+      border-radius: var(--radius-lg);
+      color: var(--color-text-muted);
+      transition: background var(--transition), color var(--transition), transform var(--transition);
+    }
+    .nav-link.active, .nav-link:hover {
+      background: var(--color-primary-highlight);
+      color: var(--color-primary);
+    }
+    .count-pill {
+      padding: 0.15rem 0.55rem;
+      border-radius: var(--radius-full);
+      background: color-mix(in srgb, var(--color-primary) 12%, var(--color-surface));
+      font-size: var(--text-xs);
+      color: var(--color-primary);
+      font-weight: 600;
+    }
+    main {
+      padding: var(--space-8);
+      width: min(100%, calc(var(--content-wide) + var(--space-16)));
+    }
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.25fr) minmax(280px, 0.75fr);
+      gap: var(--space-6);
+      align-items: stretch;
+      margin-bottom: var(--space-8);
+    }
+    .hero-panel, .summary-panel, .section-block, .question-card, .checklist, .empty-state {
+      background: var(--color-surface);
+      border: 1px solid color-mix(in srgb, var(--color-text) 10%, transparent);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-sm);
+    }
+    .hero-panel { padding: clamp(var(--space-6), 4vw, var(--space-10)); }
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+      margin-bottom: var(--space-4);
+      padding: 0.35rem 0.75rem;
+      border-radius: var(--radius-full);
+      font-size: var(--text-xs);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--color-primary);
+      background: var(--color-primary-highlight);
+      font-weight: 700;
+    }
+    .hero-panel h2 {
+      font-family: var(--font-display);
+      font-size: var(--text-2xl);
+      line-height: 0.98;
+      max-width: 12ch;
+      margin-bottom: var(--space-4);
+    }
+    .hero-panel p { max-width: 58ch; color: var(--color-text-muted); }
+    .hero-meta {
+      margin-top: var(--space-6);
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-3);
+    }
+    .hero-meta span {
+      padding: var(--space-2) var(--space-3);
+      background: var(--color-surface-2);
+      border-radius: var(--radius-full);
+      font-size: var(--text-sm);
+      color: var(--color-text-muted);
+      border: 1px solid color-mix(in srgb, var(--color-text) 10%, transparent);
+    }
+    .summary-panel {
+      padding: var(--space-6);
+      display: grid;
+      gap: var(--space-4);
+      align-content: start;
+    }
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--space-3);
+    }
+    .metric {
+      padding: var(--space-4);
+      border-radius: var(--radius-lg);
+      background: var(--color-surface-2);
+      border: 1px solid color-mix(in srgb, var(--color-text) 8%, transparent);
+    }
+    .metric strong {
+      display: block;
+      font-size: var(--text-lg);
+      color: var(--color-text);
+    }
+    .metric span { color: var(--color-text-muted); font-size: var(--text-sm); }
+    .content-grid {
+      display: grid;
+      gap: var(--space-6);
+    }
+    .section-block { padding: var(--space-6); scroll-margin-top: var(--space-8); }
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      gap: var(--space-4);
+      align-items: start;
+      margin-bottom: var(--space-5);
+      padding-bottom: var(--space-4);
+      border-bottom: 1px solid var(--color-divider);
+    }
+    .section-head h3 {
+      font-size: var(--text-xl);
+      font-family: var(--font-display);
+      margin-bottom: var(--space-2);
+    }
+    .section-head p { color: var(--color-text-muted); max-width: 58ch; }
+    .section-tag {
+      white-space: nowrap;
+      padding: var(--space-2) var(--space-3);
+      background: var(--color-primary-highlight);
+      border-radius: var(--radius-full);
+      font-size: var(--text-xs);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--color-primary);
+      font-weight: 700;
+    }
+    .question-list { display: grid; gap: var(--space-4); }
+    .question-card {
+      padding: var(--space-5);
+      background: linear-gradient(180deg, var(--color-surface-2), var(--color-surface));
+      transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition);
+    }
+    .question-card[hidden], .section-block[hidden] { display: none !important; }
+    .question-card summary {
+      list-style: none;
+      display: flex;
+      justify-content: space-between;
+      gap: var(--space-4);
+      cursor: pointer;
+      align-items: start;
+    }
+    .question-card summary::-webkit-details-marker { display: none; }
+    .question-card h4 {
+      font-size: var(--text-lg);
+      line-height: 1.25;
+      margin-bottom: var(--space-2);
+    }
+    .question-card .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-2);
+      margin-top: var(--space-3);
+    }
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      min-height: 28px;
+      padding: 0.2rem 0.65rem;
+      border-radius: var(--radius-full);
+      background: var(--color-surface-offset);
+      color: var(--color-text-muted);
+      font-size: var(--text-xs);
+      font-weight: 600;
+    }
+    .toggle-indicator {
+      flex: 0 0 auto;
+      width: 2rem; height: 2rem;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: var(--color-primary-highlight);
+      color: var(--color-primary);
+      margin-top: var(--space-1);
+      transition: transform var(--transition);
+    }
+    details[open] .toggle-indicator { transform: rotate(45deg); }
+    .answer {
+      margin-top: var(--space-4);
+      padding-top: var(--space-4);
+      border-top: 1px solid var(--color-divider);
+      color: var(--color-text-muted);
+    }
+    .answer p + p, .answer ul + p, .answer p + ul { margin-top: var(--space-3); }
+    .answer ul { padding-left: 1.1rem; }
+    .answer li + li { margin-top: var(--space-2); }
+    .checklist {
+      margin-top: var(--space-8);
+      padding: var(--space-6);
+      display: grid;
+      gap: var(--space-4);
+    }
+    .checklist h3 { font-family: var(--font-display); font-size: var(--text-xl); }
+    .checklist-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--space-4);
+    }
+    .check-item {
+      padding: var(--space-4);
+      border-radius: var(--radius-lg);
+      background: var(--color-surface-2);
+      border: 1px solid color-mix(in srgb, var(--color-text) 8%, transparent);
+    }
+    .check-item strong { display: block; margin-bottom: var(--space-2); }
+    .empty-state {
+      padding: var(--space-10);
+      text-align: center;
+      color: var(--color-text-muted);
+    }
+    .empty-state strong { display: block; color: var(--color-text); margin-bottom: var(--space-2); }
+    @media (max-width: 1080px) {
+      .site-shell { grid-template-columns: 1fr; }
+      .sidebar {
+        position: static;
+        height: auto;
+        border-right: 0;
+        border-bottom: 1px solid color-mix(in srgb, var(--color-text) 12%, transparent);
+      }
+      main { width: 100%; padding: var(--space-6); }
+      .hero { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 720px) {
+      .section-head, .tool-row { flex-direction: column; }
+      .summary-grid, .checklist-grid { grid-template-columns: 1fr; }
+      .sidebar h1 { max-width: none; }
+      .hero-panel h2 { max-width: none; }
+      main { padding: var(--space-4); }
+      .section-block, .hero-panel, .summary-panel, .checklist, .empty-state { padding: var(--space-5); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; scroll-behavior: auto !important; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to content</a>
+  <div class="site-shell">
+    <aside class="sidebar">
+      <div>
+        <a href="#top" class="logo" aria-label="Databricks Interview Hub home">
+          <svg viewBox="0 0 48 48" fill="none" aria-hidden="true">
+            <path d="M9 15.5 24 7l15 8.5-15 8.5L9 15.5Z" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"/>
+            <path d="M9 24.5 24 16l15 8.5M9 33.5 24 25l15 8.5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Interview Hub
+        </a>
+      </div>
+      <div>
+        <h1>Databricks interview questions, organized like docs.</h1>
+        <p>Use search, category navigation, and expandable answers to keep preparation clean, fast, and easy to update.</p>
+      </div>
+      <div class="tool-row">
+        <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch theme">
+          <span aria-hidden="true">◐</span>
+        </button>
+        <button class="export-btn" type="button" id="expandAll">Expand all</button>
+        <button class="export-btn" type="button" id="collapseAll">Collapse all</button>
+      </div>
+      <label class="search-box" for="siteSearch">
+        <span aria-hidden="true">⌕</span>
+        <input id="siteSearch" type="search" placeholder="Search questions, answers, tags..." />
+      </label>
+      <nav aria-label="Question sections" class="nav-list" id="sectionNav">
+        <a class="nav-link" href="#fundamentals"><span>Fundamentals</span><span class="count-pill">4</span></a>
+        <a class="nav-link" href="#spark"><span>Apache Spark</span><span class="count-pill">4</span></a>
+        <a class="nav-link" href="#delta"><span>Delta Lake</span><span class="count-pill">4</span></a>
+        <a class="nav-link" href="#sql"><span>SQL & Warehousing</span><span class="count-pill">4</span></a>
+        <a class="nav-link" href="#architecture"><span>Architecture</span><span class="count-pill">4</span></a>
+        <a class="nav-link" href="#scenario"><span>Scenario Round</span><span class="count-pill">4</span></a>
+      </nav>
+    </aside>
+
+    <main id="main-content">
+      <section class="hero" id="top">
+        <div class="hero-panel">
+          <span class="eyebrow">Documentation-first prep</span>
+          <h2>One place for Databricks interview questions and crisp answers.</h2>
+          <p>This starter website is built so you can keep adding categories, edit answers quickly, search across everything, and use it as a clean internal knowledge base or personal preparation guide.</p>
+          <div class="hero-meta">
+            <span>Searchable Q&A cards</span>
+            <span>Dark mode</span>
+            <span>Category sidebar</span>
+            <span>Expandable answers</span>
+          </div>
+        </div>
+        <div class="summary-panel">
+          <div>
+            <p class="eyebrow" style="margin-bottom: var(--space-3);">Structure</p>
+            <p style="color: var(--color-text-muted);">Designed like lightweight documentation rather than a generic blog page.</p>
+          </div>
+          <div class="summary-grid">
+            <div class="metric"><strong>24</strong><span>Sample questions</span></div>
+            <div class="metric"><strong>6</strong><span>Core sections</span></div>
+            <div class="metric"><strong>1</strong><span>Single-file deploy</span></div>
+            <div class="metric"><strong>Easy</strong><span>Content updates</span></div>
+          </div>
+        </div>
+      </section>
+
+      <div class="content-grid" id="contentGrid">
+        <section class="section-block" id="fundamentals" data-section="fundamentals">
+          <div class="section-head">
+            <div>
+              <h3>Fundamentals</h3>
+              <p>Core concepts interviewers often ask before they move into Spark internals, optimization, or architecture trade-offs.</p>
+            </div>
+            <span class="section-tag">Starter layer</span>
+          </div>
+          <div class="question-list">
+            <details class="question-card" data-search="what is databricks platform lakehouse unified analytics fundamentals beginner">
+              <summary>
+                <div>
+                  <h4>What is Databricks, and how is it different from a traditional data platform?</h4>
+                  <div class="meta"><span class="chip">Platform</span><span class="chip">Lakehouse</span><span class="chip">Beginner</span></div>
+                </div>
+                <span class="toggle-indicator">+</span>
+              </summary>
+              <div class="answer">
+                <p>Databricks is a unified analytics platform built around the lakehouse model, so data engineering, analytics, machine learning, and governance can work on the same foundation instead of separate tools.</p>
+                <p>A traditional stack often splits storage, ETL, BI, and ML across multiple systems, while Databricks tries to reduce movement, duplication, and operational overhead by centralizing compute and data workflows.</p>
+              </div>
+            </details>
+            <details class="question-card" data-search="lakehouse architecture data lake warehouse transactional reliability performance">
+              <summary>
+                <div>
+                  <h4>What is the lakehouse architecture?</h4>
+                  <div class="meta"><span class="chip">Architecture</span><span class="chip">Concept</span></div>
+                </div>
+                <span class="toggle-indicator">+</span>
+              </summary>
+              <div class="answer">
+                <p>A lakehouse combines the low-cost, flexible storage style of a data lake with the management and performance features people expect from a warehouse.</p>
+                <p>The key point is that you can keep raw and curated data in open storage formats while still getting ACID transactions, schema enforcement, and faster analytics with technologies such as Delta Lake.</p>
+              </div>
+            </details>
+            <details class="question-card" data-search="workspace notebooks jobs clusters repos collaboration">
+              <summary>
+                <div>
+                  <h4>What are the main components inside a Databricks workspace?</h4>
+                  <div class="meta"><span class="chip">Workspace</span><span class="chip">Navigation</span></div>
+                </div>
+                <span class="toggle-indicator">+</span>
+              </summary>
+              <div class="answer">
+                <p>Common components include notebooks, clusters or compute, jobs, workflows, repos, SQL warehouses, data catalogs, and model or serving features depending on the edition.</p>
+                <p>A good interview answer also mentions that workspaces support collaboration across personas such as analysts, data engineers, and ML practitioners.</p>
+              </div>
+            </details>
+            <details class="question-card" data-search="databricks managed tables external tables difference">
+              <summary>
+                <div>
+                  <h4>What is the difference between managed and external tables?</h4>
+                  <div class="meta"><span class="chip">Tables</span><span class="chip">Storage</span></div>
+                </div>
+                <span class="toggle-indicator">+</span>
+              </summary>
+              <div class="answer">
+                <p>Managed tables are controlled by the platform, so Databricks manages both metadata and underlying data lifecycle.</p>
+                <p>External tables keep the data in a user-managed location, while the metastore points to it; this is useful when teams want tighter control over storage paths, sharing, or lifecycle policies.</p>
+              </div>
+            </details>
+          </div>
+        </section>
+
+        <section class="section-block" id="spark" data-section="spark">
+          <div class="section-head">
+            <div>
+              <h3>Apache Spark</h3>
+              <p>Questions here test whether you understand execution, partitioning, optimization, and how Databricks uses Spark under the hood.</p>
+            </div>
+            <span class="section-tag">Execution layer</span>
+          </div>
+          <div class="question-list">
+            <details class="question-card" data-search="lazy evaluation spark actions transformations optimization">
+              <summary><div><h4>What is lazy evaluation in Spark, and why does it matter?</h4><div class="meta"><span class="chip">Spark</span><span class="chip">Execution</span></div></div><span class="toggle-indicator">+</span></summary>
+              <div class="answer">
+                <p>Lazy evaluation means Spark does not execute transformations immediately; instead, it builds a logical plan and waits until an action is triggered.</p>
+                <p>This matters because Spark can optimize the execution plan, reduce unnecessary work, and combine stages more efficiently before actual computation starts.</p>
+              </div>
+            </details>
+            <details class="question-card" data-search="partitioning repartition coalesce skew performance spark">
+              <summary><div><h4>What is the difference between repartition and coalesce?</h4><div class="meta"><span class="chip">Partitions</span><span class="chip">Performance</span></div></div><span class="toggle-indicator">+</span></summary>
+              <div class="answer">
+                <p><strong>Repartition</strong> reshuffles data and can both increase or decrease partitions, which makes it flexible but more expensive.</p>
+                <p>Coalesce usually reduces partitions with less shuffle, so it is often preferred when you want to shrink partition count after filtering or before writing output.</p>
+              </div>
+            </details>
+            <details class="question-card" data-search="wide transformations narrow transformations spark stages shuffle">
+              <summary><div><h4>How do narrow and wide transformations differ?</h4><div class="meta"><span class="chip">Stages</span><span class="chip">Shuffle</span></div></div><span class="toggle-indicator">+</span></summary>
+              <div class="answer">
+                <p>Narrow transformations do not require data movement across partitions, so each output partition depends on a small number of input partitions.</p>
+                <p>Wide transformations need a shuffle, such as in groupBy or join operations, because data must move across executors to regroup records.</p>
+              </div>
+            </details>
+            <details class="question-card" data-search="broadcast join spark when use databricks">
+              <summary><div><h4>When would you use a broadcast join?</h4><div class="meta"><span class="chip">Joins</span><span class="chip">Optimization</span></div></div><span class="toggle-indicator">+</span></summary>
+              <div class="answer">
+                <p>You use a broadcast join when one side of the join is small enough to send to each executor, which avoids a large shuffle on both sides.</p>
+                <p>This can improve performance significantly, but you still need to consider memory limits and avoid broadcasting data that is larger than expected.</p>
+              </div>
+            </details>
+          </div>
+        </section>
+
+        <section class="section-block" id="delta" data-section="delta">
+          <div class="section-head">
+            <div>
+              <h3>Delta Lake</h3>
+              <p>These questions usually appear in Databricks-focused rounds because Delta is central to reliability, versioning, and performance.</p>
+            </div>
+            <span class="section-tag">Storage layer</span>
+          </div>
+          <div class="question-list">
+            <details class="question-card" data-search="delta lake acid transactions transaction log parquet">
+              <summary><div><h4>How does Delta Lake provide ACID transactions on top of cloud object storage?</h4><div class="meta"><span class="chip">ACID</span><span class="chip">Transaction Log</span></div></div><span class="toggle-indicator">+</span></summary>
+              <div class="answer">
+                <p>Delta Lake keeps a transaction log that records table changes in an ordered, versioned way, which lets readers and writers coordinate reliably.</p>
+                <p>Because the log tracks commits, snapshots, schema changes, and file-level operations, the table behaves more like a database table than raw files in storage.</p>
+              </div>
+            </details>
+            <details class="question-card" data-search="time travel delta lake restore previous version">
+              <summary><div><h4>What is time travel in Delta Lake?</h4><div class="meta"><span class="chip">Versioning</span><span class="chip">Recovery</span></div></div><span class="toggle-indicator">+</span></summary>
+              <div class="answer">
+                <p>Time travel lets you query or restore older versions of a Delta table using version numbers or timestamps.</p>
+                <p>It is helpful for debugging bad data loads, reproducing reports, and rolling back accidental changes during development or operations.</p>
+              </div>
+            </details>
+            <details class="question-card" data-search="optimize zorder vacuum delta lake">
+              <summary><div><h4>What do OPTIMIZE, Z-ORDER, and VACUUM do?</h4><div class="meta"><span class="chip">Maintenance</span><span class="chip">Performance</span></div></div><span class="toggle-indicator">+</span></summary>
+              <div class="answer">
+                <ul>
+                  <li>OPTIMIZE compacts many small files into fewer larger files for better read efficiency.</li>
+                  <li>Z-ORDER colocates related values to improve data skipping for common filter columns.</li>
+                  <li>VACUUM removes obsolete files that are no longer needed after retention requirements are met.</li>
+                </ul>
+              </div>
+            </details>
+            <details class="question-card" data-search="schema evolution schema enforcement delta lake difference">
+              <summary><div><h4>What is the difference between schema enforcement and schema evolution?</h4><div class="meta"><span class="chip">Governance</span><span class="chip">Schema</span></div></div><span class="toggle-indicator">+</span></summary>
+              <div class="answer">
+                <p>Schema enforcement prevents invalid or unexpected writes when incoming data does not match the target table definition.</p>
+                <p>Schema evolution allows controlled updates to the schema, such as adding new columns, when the change is intentional and supported by the write operation.</p>
+              </div>
+            </details>
+          </div>
+        </section>
+
+        <section class="section-block" id="sql" data-section="sql">
+          <div class="section-head">
+            <div>
+              <h3>SQL & Warehousing</h3>
+              <p>Useful for analytics engineering, BI, and platform roles that mix Databricks SQL with notebooks and jobs.</p>
+            </div>
+            <span class="section-tag">Analytics layer</span>
+          </div>
+          <div class="question-list">
+            <details class="question-card" data-search="databricks sql warehouse purpose serverless classic">
+              <summary><div><h4>What is a Databricks SQL warehouse?</h4><div class="meta"><span class="chip">Databricks SQL</span><span class="chip">Warehouse</span></div></div><span class="toggle-indicator">+</span></summary>
+              <div class="answer">
+                <p>A Databricks SQL warehouse is compute optimized for SQL queries, dashboards, and BI workloads instead of notebook-first engineering tasks.</p>
+                <p>In interviews, it helps to mention that warehouses separate SQL consumption from general-purpose Spark clusters, which improves governance and workload management.</p>
+              </div>
+            </details>
+            <details class="question-card" data-search="cte view temp view global temp view databricks sql">
+              <summary><div><h4>How are CTEs, views, temp views, and global temp views different?</h4><div class="meta"><span class="chip">SQL</span><span class="chip">Objects</span></div></div><span class="toggle-indicator">+</span></summary>
+              <div class="answer">
+                <p>A CTE exists only inside a query, a regular view stores reusable query logic, a temp view is session-scoped, and a global temp view can be shared across sessions in the same application context.</p>
+                <p>This question checks whether you understand scope, persistence, and where each object is useful.</p>
+              </div>
+            </details>
+            <details class="question-card" data-search="query optimization sql predicate pushdown partition pruning databricks">
+              <summary><div><h4>What techniques help optimize SQL queries in Databricks?</h4><div class="meta"><span class="chip">Optimization</span><span class="chip">SQL Tuning</span></div></div><span class="toggle-indicator">+</span></summary>
+              <div class="answer">
+                <ul>
+                  <li>Use partitioning and clustering strategies that match common filters.</li>
+                  <li>Reduce small files and keep statistics fresh.</li>
+                  <li>Leverage predicate pushdown, column pruning, and efficient join strategies.</li>
+                  <li>Review the physical plan instead of guessing.</li>
+                </ul>
+              </div>
+            </details>
+            <details class="question-card" data-search="window functions interview ranking running total databricks sql">
+              <summary><div><h4>Why are window functions common in Databricks SQL interviews?</h4><div class="meta"><span class="chip">Window Functions</span><span class="chip">Analytics</span></div></div><span class="toggle-indicator">+</span></summary>
+              <div class="answer">
+                <p>Window functions solve ranking, running totals, lead-lag, and de-duplication problems without collapsing rows like aggregate queries do.</p>
+                <p>Interviewers use them because they reveal whether you can express business logic clearly and efficiently in SQL.</p>
+              </div>
+            </details>
+          </div>
+        </section>
+
+        <section class="section-block" id="architecture" data-section="architecture">
+          <div class="section-head">
+            <div>
+              <h3>Architecture</h3>
+              <p>These questions assess whether you can design reliable pipelines and reason about cost, scalability, and governance.</p>
+            </div>
+            <span class="section-tag">System design</span>
+          </div>
+          <div class="question-list">
+            <details class="question-card" data-search="medallion architecture bronze silver gold databricks">
+              <summary><div><h4>What is the medallion architecture in Databricks?</h4><div class="meta"><span class="chip">Bronze</span><span class="chip">Silver</span><span class="chip">Gold</span></div></div><span class="toggle-indicator">+</span></summary>
+              <div class="answer">
+                <p>The medallion pattern organizes data into bronze, silver, and gold layers to separate raw ingestion, cleaned transformation, and business-ready consumption.</p>
+                <p>This improves traceability, data quality, and reusability because each layer has a clear purpose and contract.</p>
+              </div>
+            </details>
+            <details class="question-card" data-search="batch vs streaming architecture databricks structured streaming">
+              <summary><div><h4>How would you choose between batch and streaming pipelines?</h4><div class="meta"><span class="chip">Streaming</span><span class="chip">Trade-offs</span></div></div><span class="toggle-indicator">+</span></summary>
+              <div class="answer">
+                <p>The choice depends on latency needs, source behavior, downstream expectations, operational complexity, and cost.</p>
+                <p>If the business needs near-real-time updates and can support checkpointing, late-arriving data handling, and monitoring, streaming may be justified; otherwise, well-designed batch pipelines are often simpler and cheaper.</p>
+              </div>
+            </details>
+            <details class="question-card" data-search="unity catalog governance security databricks">
+              <summary><div><h4>What problem does Unity Catalog solve?</h4><div class="meta"><span class="chip">Governance</span><span class="chip">Security</span></div></div><span class="toggle-indicator">+</span></summary>
+              <div class="answer">
+                <p>Unity Catalog centralizes governance for data, AI assets, permissions, lineage, and discovery across workspaces.</p>
+                <p>A strong answer highlights that centralized access control and auditability become easier when governance is not spread across isolated metastores or teams.</p>
+              </div>
+            </details>
+            <details class="question-card" data-search="job clusters all purpose clusters difference cost governance">
+              <summary><div><h4>When should you use job clusters versus all-purpose clusters?</h4><div class="meta"><span class="chip">Compute</span><span class="chip">Cost Control</span></div></div><span class="toggle-indicator">+</span></summary>
+              <div class="answer">
+                <p>Job clusters are typically better for scheduled or automated workloads because they are ephemeral, isolated, and easier to align with specific jobs.</p>
+                <p>All-purpose clusters are more useful for interactive development, ad hoc exploration, and shared notebook work, but they need tighter cost and governance controls.</p>
+              </div>
+            </details>
+          </div>
+        </section>
+
+        <section class="section-block" id="scenario" data-section="scenario">
+          <div class="section-head">
+            <div>
+              <h3>Scenario Round</h3>
+              <p>Practical prompts that push you beyond definitions and into design choices, troubleshooting, and stakeholder communication.</p>
+            </div>
+            <span class="section-tag">Applied thinking</span>
+          </div>
+          <div class="question-list">
+            <details class="question-card" data-search="pipeline slow performance debugging databricks scenario">
+              <summary><div><h4>A pipeline suddenly becomes slow after a new release. How would you investigate?</h4><div class="meta"><span class="chip">Troubleshooting</span><span class="chip">Scenario</span></div></div><span class="toggle-indicator">+</span></summary>
+              <div class="answer">
+                <p>Start by comparing runs before and after the release, checking execution plans, shuffle behavior, input volumes, small-file growth, cluster changes, and skew indicators.</p>
+                <p>Then isolate whether the issue is code logic, data characteristics, cluster sizing, or storage layout, and propose fixes with measurable evidence rather than assumptions.</p>
+              </div>
+            </details>
+            <details class="question-card" data-search="late arriving data streaming deduplication watermark scenario">
+              <summary><div><h4>How would you handle late-arriving data in a streaming solution?</h4><div class="meta"><span class="chip">Structured Streaming</span><span class="chip">Data Quality</span></div></div><span class="toggle-indicator">+</span></summary>
+              <div class="answer">
+                <p>You would usually define watermarking, deduplication logic, and acceptable lateness based on the business SLA instead of purely technical defaults.</p>
+                <p>It is important to explain the trade-off: stricter lateness windows reduce state and cost, but they may drop legitimate delayed records.</p>
+              </div>
+            </details>
+            <details class="question-card" data-search="migration to databricks on premises warehouse scenario">
+              <summary><div><h4>How would you migrate an existing on-prem warehouse workload to Databricks?</h4><div class="meta"><span class="chip">Migration</span><span class="chip">Planning</span></div></div><span class="toggle-indicator">+</span></summary>
+              <div class="answer">
+                <p>Break the migration into assessment, prioritization, data movement, query conversion, validation, performance tuning, and operating-model setup.</p>
+                <p>Interviewers usually want to hear that you would migrate in waves, prove correctness with parallel runs, and redesign where needed instead of blindly lifting every legacy pattern.</p>
+              </div>
+            </details>
+            <details class="question-card" data-search="stakeholder asks real time dashboard but data refresh hourly scenario">
+              <summary><div><h4>How would you respond if a stakeholder asks for real-time dashboards but the source refreshes hourly?</h4><div class="meta"><span class="chip">Communication</span><span class="chip">Requirements</span></div></div><span class="toggle-indicator">+</span></summary>
+              <div class="answer">
+                <p>Clarify the business meaning of real time first, because many requests are actually about faster visibility rather than true second-level freshness.</p>
+                <p>A mature answer balances expectations, source constraints, cost, and business value, then proposes the simplest architecture that meets the real need.</p>
+              </div>
+            </details>
+          </div>
+        </section>
+      </div>
+
+      <section class="checklist" aria-labelledby="extend-site">
+        <h3 id="extend-site">How to extend this site</h3>
+        <div class="checklist-grid">
+          <div class="check-item"><strong>Add new sections.</strong> Duplicate a section block, update the sidebar link, and keep the same searchable card structure.</div>
+          <div class="check-item"><strong>Replace sample answers.</strong> Each answer sits inside a single details card, so editing content is quick and safe.</div>
+          <div class="check-item"><strong>Tag by level.</strong> Use chips such as Beginner, Intermediate, Scenario, SQL, or Spark to help targeted revision.</div>
+          <div class="check-item"><strong>Publish anywhere.</strong> Because this is a single HTML file, you can host it on GitHub Pages, Netlify, or any static site server.</div>
+        </div>
+      </section>
+
+      <section class="empty-state" id="emptyState" hidden>
+        <strong>No matching questions found.</strong>
+        Try a different keyword such as Spark, Delta, SQL, streaming, governance, or medallion.
+      </section>
+    </main>
+  </div>
+
+  <script>
+    (function () {
+      const root = document.documentElement;
+      const toggle = document.querySelector('[data-theme-toggle]');
+      let theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      root.setAttribute('data-theme', theme);
+      const setToggle = () => {
+        toggle.innerHTML = theme === 'dark' ? '<span aria-hidden="true">☀</span>' : '<span aria-hidden="true">☾</span>';
+        toggle.setAttribute('aria-label', theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
+      };
+      setToggle();
+      toggle.addEventListener('click', () => {
+        theme = theme === 'dark' ? 'light' : 'dark';
+        root.setAttribute('data-theme', theme);
+        setToggle();
+      });
+
+      const searchInput = document.getElementById('siteSearch');
+      const cards = [...document.querySelectorAll('.question-card')];
+      const sections = [...document.querySelectorAll('.section-block')];
+      const emptyState = document.getElementById('emptyState');
+      const navLinks = [...document.querySelectorAll('.nav-link')];
+
+      function applySearch() {
+        const term = searchInput.value.trim().toLowerCase();
+        let visibleCount = 0;
+
+        sections.forEach(section => {
+          const sectionCards = [...section.querySelectorAll('.question-card')];
+          let sectionVisible = 0;
+
+          sectionCards.forEach(card => {
+            const haystack = (card.dataset.search + ' ' + card.textContent).toLowerCase();
+            const matched = !term || haystack.includes(term);
+            card.hidden = !matched;
+            if (matched) {
+              visibleCount += 1;
+              sectionVisible += 1;
+            }
+          });
+
+          section.hidden = sectionVisible === 0;
+        });
+
+        emptyState.hidden = visibleCount !== 0;
+      }
+
+      searchInput.addEventListener('input', applySearch);
+      document.getElementById('expandAll').addEventListener('click', () => cards.forEach(card => { if (!card.hidden) card.open = true; }));
+      document.getElementById('collapseAll').addEventListener('click', () => cards.forEach(card => card.open = false));
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          const link = document.querySelector(`.nav-link[href="#${entry.target.id}"]`);
+          if (!link) return;
+          if (entry.isIntersecting) {
+            navLinks.forEach(item => item.classList.remove('active'));
+            link.classList.add('active');
+          }
+        });
+      }, { rootMargin: '-20% 0px -65% 0px', threshold: 0.1 });
+
+      sections.forEach(section => observer.observe(section));
+      applySearch();
+    })();
+  </script>
+</body>
+</html>
